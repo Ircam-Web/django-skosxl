@@ -278,9 +278,10 @@ class Label(models.Model):
                                              language=self.language
                                              ).exists():
                 raise ValidationError(_(u'There can be only one preferred label by language'))
-            if not self.concept.pref_label or self.concept.pref_label == '<no label>' :
-                self.concept.pref_label = self.label_text
-                self.concept.save()
+            if self.concept:
+                if not self.concept.pref_label or self.concept.pref_label == '<no label>' :
+                    self.concept.pref_label = self.label_text
+                    self.concept.save()
         super(Label, self).save()
         
 #class LabelledItem(GenericTaggedItemBase):

@@ -101,7 +101,7 @@ class FkSearchInput(ForeignKeyRawIdWidget):
     def label_for_value(self, value):
         key = self.rel.get_related_field().name
         obj = self.rel.to._default_manager.get(**{key: value})
-        return Truncate(obj).words(14)
+        return str(obj)
 
     def __init__(self, rel, search_fields, attrs=None, admin_site = site):
         self.search_fields = search_fields
@@ -121,7 +121,7 @@ class FkSearchInput(ForeignKeyRawIdWidget):
             url = '?' + '&amp;'.join(['%s=%s' % (k, v) for k, v in params.items()])
         else:
             url = ''
-        if not attrs.has_key('class'):
+        if 'class' not in attrs:
             attrs['class'] = 'vForeignKeyRawIdAdminField'
         # Call the TextInput render method directly to have more control
         output = [forms.TextInput.render(self, name, value, attrs)]
@@ -180,7 +180,7 @@ class NoLookupsForeignKeySearchInput(ForeignKeyRawIdWidget):
     def label_for_value(self, value):
         key = self.rel.get_related_field().name
         obj = self.rel.to._default_manager.get(**{key: value})
-        return Truncate(obj).words(14)
+        return str(obj)
 
     def __init__(self, rel, search_fields, attrs=None, admin_site=site):
         self.search_fields = search_fields
@@ -279,7 +279,7 @@ class InlineSearchInput(ForeignKeyRawIdWidget):
             url = '?' + '&amp;'.join(['%s=%s' % (k, v) for k, v in params.items()])
         else:
             url = ''
-        if not attrs.has_key('class'):
+        if 'class' not in attrs:
             attrs['class'] = 'vForeignKeyRawIdAdminField'
         # Call the TextInput render method directly to have more control
         output = [forms.TextInput.render(self, name, value, attrs)]

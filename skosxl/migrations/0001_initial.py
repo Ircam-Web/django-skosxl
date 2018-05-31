@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('rdf_io', '0003_auto_20180531_1448'),
+        ('rdf_io', '0003_auto_20180531_1517'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
