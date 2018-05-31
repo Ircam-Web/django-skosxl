@@ -110,18 +110,17 @@ class Scheme(models.Model):
         return tree 
     def test_tree(self):
         i = self.tree()
-        print i[0]
+        print(i[0])
         for j in i[1]:
-            print u'--' +unicode(j[0])
+            print(u'--' +unicode(j[0]))
             for k in j[1]:
-                print u'----' + unicode(k[0])
+                print(u'----' + unicode(k[0]))
                 for l in k[1]:
-                    print u'------' + unicode(l[0])
+                    print(u'------' + unicode(l[0]))
                     for m in l[1]:
-                        print u'--------' + unicode(m[0])         
-   
+                        print(u'--------' + unicode(m[0]))
                         for idx, val in enumerate(ints):
-                            print idx, val
+                            print(idx, val)
    
     # needs fixing - has limited depth of traversal - probably want an option to paginate and limit.
     def json_tree(self,admin_url=False):
@@ -289,7 +288,7 @@ class Label(models.Model):
 
  
 def create_reverse_relation(concept,rel_type):
-    print 'creating inverse relation'
+    print('creating inverse relation')
     new_rel = SemRelation(  origin_concept=concept.target_concept, 
                             target_concept=concept.origin_concept,
                             rel_type=rel_type)

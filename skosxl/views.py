@@ -50,7 +50,7 @@ SELECT ?label ?uri WHERE {
 }
             """
             
-            print query
+            print(query)
             sparql.setQuery(query)          
             sparql.setReturnFormat(JSON)
             
@@ -63,7 +63,7 @@ SELECT ?label ?uri WHERE {
                                     'uri':result["uri"]["value"],
                                     'voc':endpoint[0]})
         except Exception,e :
-            print "Caught:", e
+            print("Caught:", e)
     return HttpResponse(    json.dumps(concepts), 
                             mimetype="application/json")
 
