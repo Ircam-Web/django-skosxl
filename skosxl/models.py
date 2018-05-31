@@ -174,7 +174,7 @@ class Concept(models.Model):
     created     = exfields.CreationDateTimeField(_(u'created'))
     modified    = exfields.ModificationDateTimeField(_(u'modified'))
     status      = models.PositiveSmallIntegerField( _(u'review status'),
-                                                    choices=REVIEW_STATUS.CHOICES, 
+                                                    choices=REVIEW_STATUS, 
                                                     default=REVIEW_STATUS.active)
     user        = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True,null=True,verbose_name=_(u'django user'),editable=False)
     uri         = models.CharField(blank=True,max_length=250,verbose_name=_(u'main URI'),editable=False)    
@@ -244,7 +244,7 @@ class Label(models.Model):
     # FIELDS name and slug are defined in TagBase  - they are forced to be unique
     # so if a concept is to be made available as a tag then it must conform to this constraint - generating a label without a Concept implies its is a tag generation - and name will be forced to be unique.
     concept     = models.ForeignKey(Concept,blank=True,null=True,verbose_name=_(u'main concept'),related_name='labels')
-    label_type  = models.PositiveSmallIntegerField(_(u'label type'), choices=tuple(LABEL_TYPES.CHOICES), default= LABEL_TYPES.prefLabel)
+    label_type  = models.PositiveSmallIntegerField(_(u'label type'), choices=tuple(LABEL_TYPES), default= LABEL_TYPES.prefLabel)
     label_text  = models.CharField(_(u'label text'),max_length=100, null=False)
     language    = models.CharField(_(u'language'),max_length=10, choices=LANG_LABELS, default='fr')
  
@@ -302,7 +302,7 @@ class SemRelation(models.Model):
     '''
     origin_concept = models.ForeignKey(Concept,related_name='rel_origin',verbose_name=(_(u'Origin')))
     target_concept = models.ForeignKey(Concept,related_name='rel_target',verbose_name=(_(u'Target')))
-    rel_type = models.PositiveSmallIntegerField( _(u'Type of semantic relation'),choices=REL_TYPES.CHOICES, 
+    rel_type = models.PositiveSmallIntegerField( _(u'Type of semantic relation'),choices=REL_TYPES, 
                                                     default=REL_TYPES.narrower)
 
     #    rel_type = models.ForeignKey(RelationType, related_name='curl', verbose_name=_(u'Type of semantic relation'))
@@ -339,7 +339,7 @@ class MapRelation(models.Model):
     uri = models.CharField(_(u'Target Concept URI'), max_length=250)
 #     voc = models.ForeignKey(Vocabulary, verbose_name=(_(u'SKOS Thesaurus')))
     match_type = models.PositiveSmallIntegerField( _(u'Type of mapping relation'),
-                                                     choices=MATCH_TYPES.CHOICES, 
+                                                     choices=MATCH_TYPES, 
                                                      default=MATCH_TYPES.closeMatch)
     class Meta: 
         verbose_name = _(u'Mapping relation')
