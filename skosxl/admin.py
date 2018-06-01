@@ -14,6 +14,7 @@ from skosxl.utils.autocomplete_admin import FkAutocompleteAdmin, InlineAutocompl
 #     
     
 class LabelInline(InlineAutocompleteAdmin):
+
     model = Label
     readonly_fields = ('created',)
     fields = ('language','label_type','label_text','created')
@@ -22,6 +23,7 @@ class LabelInline(InlineAutocompleteAdmin):
 
 
 class NotationInline(InlineAutocompleteAdmin):
+    
     model = Notation
     # readonly_fields = ('slug','created')
     fields = ('code','namespace')
@@ -48,6 +50,7 @@ class RelInline(InlineAutocompleteAdmin):
 
 
 def create_action(scheme):
+
     fun = lambda modeladmin, request, queryset: queryset.update(scheme=scheme)
     name = "moveto_%s" % (scheme.slug,)
     return (name, (fun, name, _(u'Make selected concept part of the "%s" scheme') % (scheme,)))
@@ -126,6 +129,7 @@ create_concept_command.short_description = _(u"Create concept(s) from selected l
 
 
 class ConceptInline(InlineAutocompleteAdmin):
+    
     model = Concept
     readonly_fields = ('pref_label',)
     fields = ('pref_label','top_concept','status')
@@ -135,6 +139,7 @@ class ConceptInline(InlineAutocompleteAdmin):
 
 
 class LabelAdmin(FkAutocompleteAdmin):
+
     list_display = ('label_text','label_type','concept')
     fields = ('label_text','language','label_type','concept')
     related_search_fields = {'concept' : ('pref_label','definition')}
@@ -146,6 +151,7 @@ admin.site.register(Label, LabelAdmin)
 
 
 class SchemeAdmin(FkAutocompleteAdmin):
+    
     readonly_fields = ('created','modified')
     inlines = [  ConceptInline, ]
   

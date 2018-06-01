@@ -243,6 +243,7 @@ class InlineSearchInput(ForeignKeyRawIdWidget):
     # Set this to the patch of the search view
     search_path = '../foreignkey_autocomplete/'
     admin_site = site
+
     class Media:
         css = {
             'all': ('autocomplete/css/jquery.autocomplete.css',)
@@ -310,20 +311,11 @@ class InlineSearchInput(ForeignKeyRawIdWidget):
         return mark_safe(u''.join(output))
 
 
-
-
-
-
-
-
-
 # ====================================
 # ====================================
 #  standard FK autocomplete
 #  ===================================
 #  ===================================
-
-
 
 
 class FkAutocompleteAdmin(admin.ModelAdmin):

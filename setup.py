@@ -18,7 +18,7 @@ setup(
     name='django-skosxl',
     version = VERSION,
     description='Pluggable django application for managing a SKOS-XL Thesaurus, based on a tag folksonomy',
-    packages=['skosxl','skosxl.utils'],
+    packages=find_packages(),
     include_package_data=True,
     author='Dominique Guardiola',
     author_email='dguardiola@quinode.fr',

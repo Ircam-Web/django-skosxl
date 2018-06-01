@@ -79,10 +79,13 @@ DEFAULT_SCHEME_SLUG = 'general'
 
     
 class SchemeManager(models.Manager):
+
     def get_by_natural_key(self, uri):
         return self.get( uri = uri)
 
+
 class Scheme(models.Model):
+
     objects = SchemeManager()
     
     pref_label  = models.CharField(_(u'label'),blank=True,max_length=255)#should just be called label
@@ -206,7 +209,7 @@ class Concept(models.Model):
             self.scheme = Scheme.objects.get(slug=DEFAULT_SCHEME_SLUG)
         if not skip_name_lookup: #updating the pref_label
             try:
-                lookup_label = self.labels.get(language=DEFAULT_LANG,label_type=LABEL_TYPES.prefLabel)
+                lookup_label = self.labels.get(language=DEFAULT_LANG, label_type=LABEL_TYPES.prefLabel)
                 label = lookup_label.label_text
             except Label.DoesNotExist:
                 label =  '< no label >'
@@ -216,8 +219,8 @@ class Concept(models.Model):
     
     def get_narrower_concepts(self):
         childs = []
-        if SemRelation.objects.filter(origin_concept=self,rel_type=1).exists():
-            for narrower in SemRelation.objects.filter(origin_concept=self,rel_type=1):
+        if SemRelation.objects.filter(origin_concept=self, rel_type=1).exists():
+            for narrower in SemRelation.objects.filter(origin_concept=self, rel_type=1):
                 childs.append(( narrower.target_concept,
                                 narrower.target_concept.get_narrower_concepts()
                                 ))
@@ -238,9 +241,9 @@ class Concept(models.Model):
 
 class Notation(models.Model):
 
-    concept     = models.ForeignKey(Concept,blank=True,null=True,verbose_name=_(u'main concept'),related_name='notations')
-    code =  models.CharField(_(u'notation'),max_length=10, null=False)
-    namespace = models.ForeignKey(Namespace,verbose_name=_(u'namespace(type)'))
+    concept     = models.ForeignKey(Concept,blank=True, null=True, verbose_name=_(u'main concept'), related_name='notations')
+    code =  models.CharField(_(u'notation'), max_length=10,  null=False)
+    namespace = models.ForeignKey(Namespace, verbose_name=_(u'namespace(type)'))
     
     def __unicode__(self):
         return self.code + '^^<' + self.namespace.uri + '>'  
@@ -256,15 +259,15 @@ class Label(models.Model):
     '''
     # FIELDS name and slug are defined in TagBase  - they are forced to be unique
     # so if a concept is to be made available as a tag then it must conform to this constraint - generating a label without a Concept implies its is a tag generation - and name will be forced to be unique.
-    concept     = models.ForeignKey(Concept,blank=True,null=True,verbose_name=_(u'main concept'),related_name='labels')
-    label_type  = models.PositiveSmallIntegerField(_(u'label type'), choices=tuple(LABEL_TYPES), default= LABEL_TYPES.prefLabel)
-    label_text  = models.CharField(_(u'label text'),max_length=100, null=False)
-    language    = models.CharField(_(u'language'),max_length=10, choices=LANG_LABELS, default='fr')
+    concept     = models.ForeignKey(Concept, blank=True, null=True, verbose_name=_(u'main concept'), related_name='labels')
+    label_type  = models.PositiveSmallIntegerField(_(u'label type'),  choices=tuple(LABEL_TYPES),  default= LABEL_TYPES.prefLabel)
+    label_text  = models.CharField(_(u'label text'), max_length=100,  null=False)
+    language    = models.CharField(_(u'language'), max_length=10,  choices=LANG_LABELS,  default='fr')
  
     #metadata
-    user        = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True,null=True,verbose_name=_(u'django user'),editable=False)
-    uri         = models.CharField(_(u'author URI'),blank=True,max_length=250,editable=True)    
-    author_uri  = models.CharField(u'main URI',blank=True,max_length=250,editable=True)    
+    user        = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, verbose_name=_(u'django user'), editable=False)
+    uri         = models.CharField(_(u'author URI'), blank=True, max_length=250, editable=True)    
+    author_uri  = models.CharField(u'main URI', blank=True,max_length=250,editable=True)    
     created     = exfields.CreationDateTimeField(_(u'created'))
     modified    = exfields.ModificationDateTimeField(_(u'modified'))
     
@@ -316,9 +319,9 @@ class SemRelation(models.Model):
     A model linking two skos:Concept
     Defines a sub-property of skos:semanticRelation property from the origin concept to the target concept
     '''
-    origin_concept = models.ForeignKey(Concept,related_name='rel_origin',verbose_name=(_(u'Origin')))
-    target_concept = models.ForeignKey(Concept,related_name='rel_target',verbose_name=(_(u'Target')))
-    rel_type = models.PositiveSmallIntegerField( _(u'Type of semantic relation'),choices=REL_TYPES, 
+    origin_concept = models.ForeignKey(Concept, related_name='rel_origin', verbose_name=(_(u'Origin')))
+    target_concept = models.ForeignKey(Concept, related_name='rel_target', verbose_name=(_(u'Target')))
+    rel_type = models.PositiveSmallIntegerField( _(u'Type of semantic relation'), choices=REL_TYPES,  
                                                     default=REL_TYPES.narrower)
 
     #    rel_type = models.ForeignKey(RelationType, related_name='curl', verbose_name=_(u'Type of semantic relation'))
@@ -347,18 +350,18 @@ class SemRelation(models.Model):
 #     def __unicode__(self):
 #         return self.name
 #         
+
 class MapRelation(models.Model):
 
-    origin_concept = models.ForeignKey(Concept,related_name='map_origin',verbose_name=(_(u'Local concept to map')))
-#     target_concept = models.ForeignKey(Concept,related_name='map_target',verbose_name=(_(u'Remote concept')),blank=True, null=True)
-#     target_label = models.CharField(_(u'Preferred label'),max_length=255)#nan nan il faut un autre concept stocké dans un scheme
-    uri = models.CharField(_(u'Target Concept URI'), max_length=250)
-#     voc = models.ForeignKey(Vocabulary, verbose_name=(_(u'SKOS Thesaurus')))
-    match_type = models.PositiveSmallIntegerField( _(u'Type of mapping relation'),
+    origin_concept = models.ForeignKey(Concept, related_name='map_origin', verbose_name=(_(u'Local concept to map')))
+#     target_concept = models.ForeignKey(Concept, related_name='map_target', verbose_name=(_(u'Remote concept')), blank=True, null=True)
+#     target_label = models.CharField(_(u'Preferred label'), max_length=255)#nan nan il faut un autre concept stocké dans un scheme
+    uri = models.CharField(_(u'Target Concept URI'),  max_length=250)
+#     voc = models.ForeignKey(Vocabulary,  verbose_name=(_(u'SKOS Thesaurus')))
+    match_type = models.PositiveSmallIntegerField( _(u'Type of mapping relation'), 
                                                      choices=MATCH_TYPES, 
                                                      default=MATCH_TYPES.closeMatch)
     class Meta: 
         verbose_name = _(u'Mapping relation')
-        verbose_name_plural = _(u'Mapping relations')
-#     
+        verbose_name_plural = _(u'Mapping relations')   
 
