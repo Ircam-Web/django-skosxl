@@ -93,21 +93,23 @@ class Scheme(models.Model):
     modified    = exfields.ModificationDateTimeField(_(u'modified'),null=True)
     definition  = models.TextField(_(u'definition'), blank=True)
     meta  = models.TextField(_(u'additional metadata'), help_text=_(u'(<predicate> <object> ; list) '), blank=True)
+    
     def __unicode__(self):
         return self.pref_label
-        
            
     def natural_key(self):
         return( self.uri )
         
     def get_absolute_url(self):
         return reverse('scheme_detail', args=[self.slug])
+    
     def tree(self):
         tree = (self, [])  # result is a tuple(scheme,[child concepts])
         for concept in Concept.objects.filter(scheme=self,top_concept=True):
             tree[1].append((concept,concept.get_narrower_concepts())) 
             #with nested tuple(concept, [child concepts])
         return tree 
+    
     def test_tree(self):
         i = self.tree()
         print(i[0])
@@ -154,36 +156,41 @@ class SchemeMeta(models.Model):
     metaprop   =  models.ForeignKey(GenericMetaProp) 
     value = models.CharField(_(u'value'),max_length=500)
     
+
 class ConceptManager(models.Manager):
+    
+
     def get_by_natural_key(self, scheme, term):
         return self.get( scheme__uri = scheme, term=term)
-        
+    
+
 class Concept(models.Model):
+
     objects = ConceptManager()
     # this will be the 
-    term = models.CharField(_(u'term'),blank=True,null=True,max_length=255)
+    term = models.CharField(_(u'term'), blank=True, null=True, max_length=255)
     # not sure we will need this - SKOS names should enforce slug compatibility.
     slug        = exfields.AutoSlugField(populate_from=('term'))
-    pref_label = models.CharField(_(u'preferred label'),blank=True,null=True,max_length=255)
+    pref_label = models.CharField(_(u'preferred label'), blank=True, null=True, max_length=255)
 
-    
-    definition  = models.TextField(_(u'definition'), blank=True)
+    definition  = models.TextField(_(u'definition'),  blank=True)
 #    notation    = models.CharField(blank=True, null=True, max_length=100)
-    scheme      = models.ForeignKey(Scheme, blank=True, null=True)
-    changenote  = models.TextField(_(u'change note'),blank=True)
+    scheme      = models.ForeignKey(Scheme,  blank=True,  null=True)
+    changenote  = models.TextField(_(u'change note'), blank=True)
     created     = exfields.CreationDateTimeField(_(u'created'))
     modified    = exfields.ModificationDateTimeField(_(u'modified'))
-    status      = models.PositiveSmallIntegerField( _(u'review status'),
+    status      = models.PositiveSmallIntegerField( _(u'review status'), 
                                                     choices=REVIEW_STATUS, 
                                                     default=REVIEW_STATUS.active)
-    user        = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True,null=True,verbose_name=_(u'django user'),editable=False)
-    uri         = models.CharField(blank=True,max_length=250,verbose_name=_(u'main URI'),editable=False)    
-    author_uri  = models.CharField(blank=True,max_length=250,verbose_name=_(u'main URI'),editable=False)    
+    user        = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, verbose_name=_(u'django user'), editable=False)
+    uri         = models.CharField(blank=True, max_length=250, verbose_name=_(u'main URI'), editable=False)    
+    author_uri  = models.CharField(blank=True, max_length=250, verbose_name=_(u'main URI'), editable=False)    
 
     top_concept = models.BooleanField(default=False, verbose_name=_(u'is top concept'))
-    sem_relatons = models.ManyToManyField( "self",symmetrical=False,
+    sem_relatons = models.ManyToManyField( "self", symmetrical=False,
                                             through='SemRelation',
                                             verbose_name=(_(u'semantic relations')))
+    
     def __unicode__(self):
         return "/".join(self.natural_key())
     
@@ -193,6 +200,7 @@ class Concept(models.Model):
         
     def get_absolute_url(self):
         return reverse('concept_detail', args=[self.id])
+
     def save(self,skip_name_lookup=False, *args, **kwargs):
         if self.scheme is None:
             self.scheme = Scheme.objects.get(slug=DEFAULT_SCHEME_SLUG)
@@ -205,6 +213,7 @@ class Concept(models.Model):
             self.pref_label = label
             #self.save(skip_name_lookup=True)
         super(Concept, self).save(*args, **kwargs) 
+    
     def get_narrower_concepts(self):
         childs = []
         if SemRelation.objects.filter(origin_concept=self,rel_type=1).exists():
@@ -226,12 +235,16 @@ class Concept(models.Model):
     class Meta :
         unique_together = (('scheme', 'term'),)
 
+
 class Notation(models.Model):
+
     concept     = models.ForeignKey(Concept,blank=True,null=True,verbose_name=_(u'main concept'),related_name='notations')
     code =  models.CharField(_(u'notation'),max_length=10, null=False)
     namespace = models.ForeignKey(Namespace,verbose_name=_(u'namespace(type)'))
+    
     def __unicode__(self):
         return self.code + '^^<' + self.namespace.uri + '>'  
+    
     class Meta: 
         verbose_name = _(u'SKOS notation')
         verbose_name_plural = _(u'notations')
@@ -258,8 +271,10 @@ class Label(models.Model):
     
     def get_absolute_url(self):
         return reverse('tag_detail', args=[self.slug])
+    
     def __unicode__(self):
          return unicode(self.label_text)
+    
     def create_concept_from_label(self):
         if not self.concept:
             # self.label_text = self.name

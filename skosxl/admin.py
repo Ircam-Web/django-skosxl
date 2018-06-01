@@ -20,6 +20,7 @@ class LabelInline(InlineAutocompleteAdmin):
     related_search_fields = {'label' : ('label_text',)}
     extra=1    
 
+
 class NotationInline(InlineAutocompleteAdmin):
     model = Notation
     # readonly_fields = ('slug','created')
@@ -29,18 +30,22 @@ class NotationInline(InlineAutocompleteAdmin):
     
     
 class SKOSMappingInline(admin.TabularInline):
+    
     model = MapRelation
     fk_name = 'origin_concept'
     fields = ('match_type','uri')
 #    related_search_fields = {'target_concept' : ('labels__name','definition')}
     extra=1    
 
+
 class RelInline(InlineAutocompleteAdmin):
+
     model = SemRelation
     fk_name = 'origin_concept'
     fields = ('rel_type', 'target_concept')
     related_search_fields = {'target_concept' : ('labels__name','definition')}
     extra = 1
+
 
 def create_action(scheme):
     fun = lambda modeladmin, request, queryset: queryset.update(scheme=scheme)
@@ -49,6 +54,7 @@ def create_action(scheme):
 
 
 class ConceptAdmin(FkAutocompleteAdmin):
+
     readonly_fields = ('created','modified')
     search_fields = ['pref_label','slug','definition']
     list_display = ('pref_label','status','scheme','top_concept','created')
@@ -126,6 +132,7 @@ class ConceptInline(InlineAutocompleteAdmin):
  #   list_display = ('pref_label',)
     related_search_fields = {'concept' : ('prefLabel','definition')}
     extra = 0
+
 
 class LabelAdmin(FkAutocompleteAdmin):
     list_display = ('label_text','label_type','concept')

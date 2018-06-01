@@ -73,7 +73,7 @@ from django.utils.text import get_text_list
 # from django.conf.urls.defaults import *
 from django.conf.urls import patterns
 from django.contrib.admin.sites import site
-
+from django.conf.urls import url
 
 
 class FkSearchInput(ForeignKeyRawIdWidget):
@@ -358,9 +358,9 @@ class FkAutocompleteAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super(FkAutocompleteAdmin,self).get_urls()
-        search_url = patterns('',
-            (r'^foreignkey_autocomplete/$', self.admin_site.admin_view(self.foreignkey_autocomplete))
-        )
+        search_url = [
+            url(r'^foreignkey_autocomplete/$', self.admin_site.admin_view(self.foreignkey_autocomplete))
+            ]
         return search_url + urls
 
     def foreignkey_autocomplete(self, request):
