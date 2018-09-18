@@ -71,7 +71,6 @@ from django.utils.translation import ugettext as _
 from django.utils.text import get_text_list
 # added by mikele
 # from django.conf.urls.defaults import *
-from django.conf.urls import patterns
 from django.contrib.admin.sites import site
 from django.conf.urls import url
 
@@ -464,9 +463,8 @@ class NoLookupsForeignKeyAutocompleteAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super(NoLookupsForeignKeyAutocompleteAdmin,self).get_urls()
-        search_url = patterns('',
-            (r'^foreignkey_autocomplete/$', self.admin_site.admin_view(self.foreignkey_autocomplete))
-        )
+        search_url = url(r'^foreignkey_autocomplete/$', 
+            self.admin_site.admin_view(self.foreignkey_autocomplete))
         return search_url + urls
 
     def foreignkey_autocomplete(self, request):
@@ -584,9 +582,8 @@ class InlineAutocompleteAdmin(admin.TabularInline):
 
     def get_urls(self):
         urls = super(InlineAutocompleteAdmin,self).get_urls()
-        search_url = patterns('',
-            (r'^foreignkey_autocomplete/$', self.admin_site.admin_view(self.foreignkey_autocomplete))
-        )
+        search_url = url(r'^foreignkey_autocomplete/$', 
+            self.admin_site.admin_view(self.foreignkey_autocomplete))
         return search_url + urls
 
     def foreignkey_autocomplete(self, request):
