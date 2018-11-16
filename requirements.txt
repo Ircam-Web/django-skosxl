@@ -1,0 +1,9 @@
+django-taggit==0.22.2
+SPARQLWrapper>=1.5.0
+django-extensions>=0.7.1
+django-admin-tools>=0.4.1
+django-extended-choices
+git+https://github.com/flupke/django-taggit-templatetags.git#egg=taggit_templatetags
+git+https://github.com/twidi/django-extended-choices.git#egg=extended_choices
+-e .
+
