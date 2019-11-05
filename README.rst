@@ -1,9 +1,9 @@
 Django-SKOSXL
-===============================================
+=============
 
 
 What is django-skosxl good for?
-------------------------------------
+-------------------------------
 django-coop is a set of several apps to make different websites cooperate. It is based on Django.
 
 Websites often need to categorize things, but when time comes for agregating all the data and gather them by tags or categories, we often have face the fact that we have differents systems. Term reconciliation is a hard task.
